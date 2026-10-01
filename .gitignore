@@ -1,0 +1,14 @@
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+.idea/
+.vscode/
+node_modules/
+functions/.env
+functions/.secret.local
+# Keep generated Firebase config out of public repos if your unit requires it:
+# android/app/google-services.json
+# lib/firebase_options.dart

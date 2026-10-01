@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+
+    match /users/{uid} {
+      allow read, write: if signedIn() && request.auth.uid == uid;
+    }
+
+    // Optional master list of clients (admin-managed in the console).
+    match /clients/{id} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /visits/{id} {
+      allow get, list, update: if signedIn() && resource.data.workerId == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.workerId == request.auth.uid;
+    }
+
+    match /incidents/{id} {
+      allow get, list: if signedIn() && resource.data.workerId == request.auth.uid;
+      allow create: if signedIn()
+        && request.resource.data.workerId == request.auth.uid
+        && request.resource.data.description.size() >= 10;
+    }
+  }
+}
